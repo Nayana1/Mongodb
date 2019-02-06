@@ -1,0 +1,102 @@
+In a new folder named "Mongoose" ,i have created a file named app.js, also 2 folders named views and model. in views  files named home.ejs
+
+
+app.js
+----------------------------------------------------
+ar express=require('express');
+
+var mongoose=require('mongoose');// required mongo module
+
+
+
+const app=express();
+
+var mongodb=require('mongodb');
+var mongoclient=mongodb.MongoClient;
+var url="mongodb://127.0.0.1:27017";//should copy this url else error
+app.set("view engine","ejs");
+var db="mongodb://localhost/example";//specifying the db used in this project
+mongoose.connect(db,function(err){
+    if(err){console.log(err)}
+}) //connect with our server mentioned in db
+var book=require("./model/Book.js");//requiring mongodb
+app.get('/',function(req,res){
+    res.render("home")
+})
+app.get('/insert',function(req,res){
+   var b1=new book();
+   b1.bookid="Book1";
+   b1.bname="shdjshds";
+   b1.author="dsdsd";
+   b1.save(function(err,result){
+      if(err){res.send("err")}
+          else { res.send("data inserted")}
+   })
+
+})
+
+app.listen(1234,function(req,res){
+    console.log("server started listening")
+})
+
+--------------------------------------------------------------------book.js
+var mongoose=require('mongoose');
+var Schema=mongoose.Schema;
+var BookSchema =new Schema({
+    bookid:{type:String},
+    bname:{type:String},
+    author:{type:String}
+}
+
+)
+module.exports=mongoose.model("Booktab",BookSchema);
+------------------------------------------------------------------home.ejs
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+</head>
+<body>
+    <form action="/insert" method="get">
+                <input type= "submit" value= "Insert"/>
+    </form>
+    <form action="/insert" method="get">
+        <input type= "submit" value= "Insert"/>
+</form>
+<form action="/insert" method="get">
+    <input type= "submit" value= "Insert"/>
+</form>
+<form action="/insert" method="get">
+    <input type= "submit" value= "Insert"/>
+</form>
+    
+    <
+</html>
+--------------------------------------------------------------after server started running . goto mongo in cmd
+
+---
+
+> example
+2019-02-06T04:50:15.517+0530 E QUERY    [js] ReferenceError: example is not defined :
+@(shell):1:1
+> example
+2019-02-06T04:50:55.301+0530 E QUERY    [js] ReferenceError: example is not defined :
+@(shell):1:1
+> use example
+switched to db example
+> show collections
+> show collections
+booktabs
+> db.booktabs.find()
+{ "_id" : ObjectId("5c5a1e5f37da4e1a746852d9"), "bookid" : "Book1", "bname" : "shdjshds", "author" : "dsdsd", "__v" : 0 }
+>
+
+--------------------------------------------------------------------------
+
+then in browser at http://localhost:1234/insert?
+we ge "data inserted"
+-------------------------------------------------------------
+
